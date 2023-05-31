@@ -1,11 +1,9 @@
-const db = require('../models');
-
-const Post = db.Post;
+const postsService = require('../services/posts.service');
 
 const postsController = {
     getAll: async(req, res) => { 
         try {
-            const posts = await Post.findAll();
+            const posts = await postsService.getAll();
             res.status(200).json({
                 "message": "get all posts",
                 "data": posts
@@ -17,7 +15,7 @@ const postsController = {
 
     getById: async (req, res) => {
         const { id } = req.params;
-        const post = await Post.findOne({ where: { id: id } });
+        const post = await postsService.getById(id);
         res.status(200).json({
             "message": `get post by id ${id}`,
             "data": post
@@ -25,12 +23,7 @@ const postsController = {
     },
     
     create: async (req, res) => {
-        const post = await Post.create({
-            title: req.body.title,
-            author: req.body.author,
-            subject: req.body.subject,
-            
-        });
+        const post = await postsService.create();
         res.status(201).json({
             "message": "post created",
             "data": post
@@ -39,8 +32,7 @@ const postsController = {
 
     update: async (req, res) => {
         const { id } = req.params;
-        await Post.update(req.body, { where: { id: id } });
-        const post = await Post.findOne({ where: { id: id } });
+        const post = await postsService.update(id, req.body);
         res.status(200).json({
             "message": "post updated",
             "data": post
@@ -49,7 +41,7 @@ const postsController = {
 
     delete: async (req, res) => {
         const { id } = req.params;
-        await Post.destroy({ where: { id: id } });
+        await postsService.delete(id);
         res.status(200).json({
             "message": `post ${id} deleted`
         });

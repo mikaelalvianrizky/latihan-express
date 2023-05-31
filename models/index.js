@@ -25,9 +25,13 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.Post = require('./posts.models')(sequelize, DataTypes);
+db.Comment = require('./comment.models')(sequelize, DataTypes);
+db.Prediction = require('./prediction.models')(sequelize, DataTypes);
 db.sequelize.sync({ force: false })
     .then(() => {
         console.log('Database has been synchronized.');
+    }).catch((error) => {
+        console.error('Unable to synchronize the database: ', error);
     }
 )
 
